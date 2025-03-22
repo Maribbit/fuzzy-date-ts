@@ -74,12 +74,38 @@ export class FuzzyDate {
     this.second = options.second;
     this.millisecond = options.millisecond;
     
-    if (!isFuzzyDateFieldsFilledInHierarchy(this)) {
+    if (!FuzzyDate.isOptionsFilledInHierarchy(options)) {
       throw new FuzzyDateHierarchyError();
     }
-    if (!isFuzzyDateOnCalendar(this)) {
+    if (!FuzzyDate.isOptionsOnCalendar(this)) {
       throw new FuzzyDateCalendarError();
     }
+  }
+
+  private static isOptionsFilledInHierarchy(options: FuzzyDateOptions): boolean {
+    const fields = ['year', 'month', 'day', 'hour', 'minute', 'second', 'millisecond'] as const;
+  
+    const firstEmptyIndex = fields.findIndex(field => isEmpty(options[field]));
+    
+    if (firstEmptyIndex === -1) {
+      return true;
+    }
+    
+    return fields.slice(firstEmptyIndex).every(field => isEmpty(options[field]));
+  }
+
+  private static isOptionsOnCalendar(options: FuzzyDateOptions): boolean {
+    const dt = DateTime.fromObject({
+      year: options.year,
+      month: options.month ?? 1,
+      day: options.day ?? 1,
+      hour: options.hour ?? 0,
+      minute: options.minute ?? 0,
+      second: options.second ?? 0,
+      millisecond: options.millisecond ?? 0
+    });
+  
+    return dt.isValid;
   }
 
   /**
@@ -162,36 +188,4 @@ export class FuzzyDate {
       millisecond: dt.millisecond
     };
   }
-}
-
-/**
- * Checks if a fuzzy date's fields are filled in the correct hierarchy
- */
-function isFuzzyDateFieldsFilledInHierarchy(fuzzyDate: FuzzyDate): boolean {
-  const fields = ['year', 'month', 'day', 'hour', 'minute', 'second', 'millisecond'] as const;
-  
-  const firstEmptyIndex = fields.findIndex(field => isEmpty(fuzzyDate[field]));
-  
-  if (firstEmptyIndex === -1) {
-    return true;
-  }
-  
-  return fields.slice(firstEmptyIndex).every(field => isEmpty(fuzzyDate[field]));
-}
-
-/**
- * Checks if a fuzzy date represents a valid calendar date
- */
-function isFuzzyDateOnCalendar(fuzzyDate: FuzzyDate): boolean {
-  const dt = DateTime.fromObject({
-    year: fuzzyDate.year,
-    month: fuzzyDate.month ?? 1,
-    day: fuzzyDate.day ?? 1,
-    hour: fuzzyDate.hour ?? 0,
-    minute: fuzzyDate.minute ?? 0,
-    second: fuzzyDate.second ?? 0,
-    millisecond: fuzzyDate.millisecond ?? 0
-  });
-
-  return dt.isValid;
 }
