@@ -98,70 +98,70 @@ export class FuzzyDate {
   }
 
   /**
- * Get the latest possible date options that this FuzzyDate represents
- */
-getLatestPaddingOptions(): PreciseDateOptions {
-  let dt: DateTime;
-  
-  if (isEmpty(this.month)) {
-    dt = DateTime.fromObject({ year: this.year + 1 }).minus({ milliseconds: 1 });
-  } else if (isEmpty(this.day)) {
-    const month = this.month as number; // ensured by isFuzzyDateFieldsFilledInHierarchy
-    const nextMonth = month + 1 > 12 ? 1 : month + 1;
-    const nextMonthYear = month + 1 > 12 ? this.year + 1 : this.year;
-    dt = DateTime.fromObject({ year: nextMonthYear, month: nextMonth }).minus({ milliseconds: 1 });
-  } else if (isEmpty(this.hour)) {
-    dt = DateTime.fromObject({ 
-      year: this.year, 
-      month: this.month, 
-      day: this.day 
-    }).plus({ days: 1 }).minus({ milliseconds: 1 });
-  } else if (isEmpty(this.minute)) {
-    dt = DateTime.fromObject({ 
-      year: this.year, 
-      month: this.month, 
-      day: this.day, 
-      hour: this.hour 
-    }).plus({ hours: 1 }).minus({ milliseconds: 1 });
-  } else if (isEmpty(this.second)) {
-    dt = DateTime.fromObject({ 
-      year: this.year, 
-      month: this.month, 
-      day: this.day, 
-      hour: this.hour, 
-      minute: this.minute 
-    }).plus({ minutes: 1 }).minus({ milliseconds: 1 });
-  } else if (isEmpty(this.millisecond)) {
-    dt = DateTime.fromObject({ 
-      year: this.year, 
-      month: this.month, 
-      day: this.day, 
-      hour: this.hour, 
-      minute: this.minute, 
-      second: this.second 
-    }).plus({ seconds: 1 }).minus({ milliseconds: 1 });
-  } else {
-    dt = DateTime.fromObject({ 
-      year: this.year, 
-      month: this.month, 
-      day: this.day, 
-      hour: this.hour, 
-      minute: this.minute, 
-      second: this.second, 
-      millisecond: this.millisecond 
-    });
-  }
+   * Get the latest possible date options that this FuzzyDate represents
+   */
+  getLatestPaddingOptions(): PreciseDateOptions {
+    let dt: DateTime;
+    
+    if (isEmpty(this.month)) {
+      dt = DateTime.fromObject({ year: this.year + 1 }).minus({ milliseconds: 1 });
+    } else if (isEmpty(this.day)) {
+      const month = this.month as number; // ensured by isFuzzyDateFieldsFilledInHierarchy
+      const nextMonth = month + 1 > 12 ? 1 : month + 1;
+      const nextMonthYear = month + 1 > 12 ? this.year + 1 : this.year;
+      dt = DateTime.fromObject({ year: nextMonthYear, month: nextMonth }).minus({ milliseconds: 1 });
+    } else if (isEmpty(this.hour)) {
+      dt = DateTime.fromObject({ 
+        year: this.year, 
+        month: this.month, 
+        day: this.day 
+      }).plus({ days: 1 }).minus({ milliseconds: 1 });
+    } else if (isEmpty(this.minute)) {
+      dt = DateTime.fromObject({ 
+        year: this.year, 
+        month: this.month, 
+        day: this.day, 
+        hour: this.hour 
+      }).plus({ hours: 1 }).minus({ milliseconds: 1 });
+    } else if (isEmpty(this.second)) {
+      dt = DateTime.fromObject({ 
+        year: this.year, 
+        month: this.month, 
+        day: this.day, 
+        hour: this.hour, 
+        minute: this.minute 
+      }).plus({ minutes: 1 }).minus({ milliseconds: 1 });
+    } else if (isEmpty(this.millisecond)) {
+      dt = DateTime.fromObject({ 
+        year: this.year, 
+        month: this.month, 
+        day: this.day, 
+        hour: this.hour, 
+        minute: this.minute, 
+        second: this.second 
+      }).plus({ seconds: 1 }).minus({ milliseconds: 1 });
+    } else {
+      dt = DateTime.fromObject({ 
+        year: this.year, 
+        month: this.month, 
+        day: this.day, 
+        hour: this.hour, 
+        minute: this.minute, 
+        second: this.second, 
+        millisecond: this.millisecond 
+      });
+    }
 
-  return {
-    year: dt.year,
-    month: dt.month,
-    day: dt.day,
-    hour: dt.hour,
-    minute: dt.minute,
-    second: dt.second,
-    millisecond: dt.millisecond
-  };
-}
+    return {
+      year: dt.year,
+      month: dt.month,
+      day: dt.day,
+      hour: dt.hour,
+      minute: dt.minute,
+      second: dt.second,
+      millisecond: dt.millisecond
+    };
+  }
 }
 
 /**
