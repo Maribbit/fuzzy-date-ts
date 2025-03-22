@@ -38,6 +38,16 @@ export interface FuzzyDateOptions {
   millisecond?: number;
 }
 
+export interface NonFuzzyDateOptions extends FuzzyDateOptions {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  second: number;
+  millisecond: number;
+}
+
 /**
  * Represents a fuzzy date with optional data fields
  */
@@ -71,12 +81,12 @@ export class FuzzyDate {
       throw new FuzzyDateCalendarError();
     }
   }
-  
+
   /**
-   * Get the earliest possible DateTime that this FuzzyDate represents
+   * Get the earliest possible date options that this FuzzyDate represents
    */
-  getEarliestDateTime(): DateTime {
-    return DateTime.fromObject({
+  getEarliestPaddingOptions(): NonFuzzyDateOptions {
+    return {
       year: this.year,
       month: this.month ?? 1,
       day: this.day ?? 1,
@@ -84,24 +94,7 @@ export class FuzzyDate {
       minute: this.minute ?? 0,
       second: this.second ?? 0,
       millisecond: this.millisecond ?? 0
-    });
-  }
-
-  /**
-   * Gets the latest possible DateTime that this FuzzyDate represents
-   */
-  getLatestDateTime(): DateTime {
-    if (isEmpty(this.month)) {
-      // Last millisecond of the year
-      return DateTime.fromObject({ year: this.year + 1 }).minus({ milliseconds: 1 });
-    }
-    
-    // Continue with other cases...
-    return this.getEarliestDateTime();
-  }
-
-  toDateRange(): Interval {
-    return Interval.fromDateTimes(this.getEarliestDateTime(), this.getLatestDateTime());
+    };
   }
 }
 
