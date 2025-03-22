@@ -1,0 +1,36 @@
+{
+  "name": "fuzzy-date-ts",
+  "version": "1.0.0",
+  "description": "A library for handling fuzzy date calculations",
+  "main": "index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "date",
+    "fuzzy",
+    "luxon",
+    "typescript"
+  ],
+  "author": "maribbit",
+  "license": "MIT",
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "luxon": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/luxon": "^3.4.2",
+    "@types/node": "^22.13.10",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
+    "typescript": "^5.8.2"
+  }
+}
