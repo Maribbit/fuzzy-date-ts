@@ -124,6 +124,31 @@ export class FuzzyDate {
   }
 
   /**
+   * Get precision level of this FuzzyDate
+   */
+  getPrecision(): keyof FuzzyDateOptions {
+    if (!isEmpty(this.millisecond)) {
+      return 'millisecond';
+    }
+    if (!isEmpty(this.second)) {
+      return 'second';
+    }
+    if (!isEmpty(this.minute)) {
+      return 'minute';
+    }
+    if (!isEmpty(this.hour)) {
+      return 'hour';
+    }
+    if (!isEmpty(this.day)) {
+      return 'day';
+    }
+    if (!isEmpty(this.month)) {
+      return 'month';
+    }
+    return 'year';
+  }
+
+  /**
    * Get the latest possible date options that this FuzzyDate represents
    */
   getLatestPaddingOptions(): PreciseDateOptions {
