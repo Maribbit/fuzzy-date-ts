@@ -1,9 +1,6 @@
 import { DateTime } from "luxon";
 import { isEmpty } from "./util";
 
-/**
- * Specific error types for FuzzyDate validation issues
- */
 export class FuzzyDateError extends Error {
   constructor(message: string) {
     super(message);
