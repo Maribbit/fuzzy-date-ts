@@ -22,6 +22,13 @@ export class FuzzyDateCalendarError extends FuzzyDateError {
   }
 }
 
+export class FuzzyDateDeserializationError extends FuzzyDateError {
+  constructor(message: string) {
+    super(message);
+    this.name = 'FuzzyDateDeserializationError';
+  }
+}
+
 /**
  * Options for creating a FuzzyDate
  */
@@ -209,5 +216,146 @@ export class FuzzyDate {
       second: dt.second,
       millisecond: dt.millisecond
     };
+  }
+
+  /**
+   * Convert a FuzzyDate to a Fuzzy Date String
+   * @returns Fuzzy Date String representation of the FuzzyDate
+   * 
+   * The format follows a subset of ISO 8601, allowing for partial precision:
+   * - Year: "2023"
+   * - Year-Month: "2023-05"
+   * - Year-Month-Day: "2023-05-15"
+   * - Year-Month-Day Hour: "2023-05-15T10"
+   * - Year-Month-Day Hour:Minute: "2023-05-15T10:30"
+   * - Year-Month-Day Hour:Minute:Second: "2023-05-15T10:30:45"
+   * - Year-Month-Day Hour:Minute:Second.Millisecond: "2023-05-15T10:30:45.500"
+   */
+  toString(): string {
+    const parts: string[] = [];
+    
+    // Always include year
+    parts.push(this.year.toString().padStart(4, '0'));
+    
+    if (this.month !== undefined) {
+      parts.push('-');
+      parts.push(this.month.toString().padStart(2, '0'));
+      
+      if (this.day !== undefined) {
+        parts.push('-');
+        parts.push(this.day.toString().padStart(2, '0'));
+        
+        if (this.hour !== undefined) {
+          parts.push('T');
+          parts.push(this.hour.toString().padStart(2, '0'));
+          
+          if (this.minute !== undefined) {
+            parts.push(':');
+            parts.push(this.minute.toString().padStart(2, '0'));
+            
+            if (this.second !== undefined) {
+              parts.push(':');
+              parts.push(this.second.toString().padStart(2, '0'));
+              
+              if (this.millisecond !== undefined) {
+                parts.push('.');
+                parts.push(this.millisecond.toString().padStart(3, '0'));
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    return parts.join('');
+  }
+
+  /**
+   * Create a FuzzyDate from a Fuzzy Date String
+   * @param dateString Fuzzy Date String to parse
+   * @throws {FuzzyDateDeserializationError} When the string is not a valid Fuzzy Date String format
+   * @returns A new FuzzyDate instance
+   * 
+   * The format follows a subset of ISO 8601, allowing for partial precision:
+   * - Year: "2023"
+   * - Year-Month: "2023-05"
+   * - Year-Month-Day: "2023-05-15"
+   * - Year-Month-Day Hour: "2023-05-15T10"
+   * - Year-Month-Day Hour:Minute: "2023-05-15T10:30"
+   * - Year-Month-Day Hour:Minute:Second: "2023-05-15T10:30:45"
+   * - Year-Month-Day Hour:Minute:Second.Millisecond: "2023-05-15T10:30:45.500"
+   */
+  static fromString(dateString: string): FuzzyDate {
+    // Validate the overall format
+    if (!/^\d{4}(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{2}(\.\d{3})?)?)?)?)?)?$/.test(dateString)) {
+      throw new FuzzyDateDeserializationError('Invalid format');
+    }
+
+    // Split the string into date and time parts
+    const [datePart, timePart] = dateString.split('T');
+    const dateParts = datePart.split('-');
+    
+    if (dateParts.length < 1 || dateParts.length > 3) {
+      throw new FuzzyDateDeserializationError('Invalid format');
+    }
+    
+    const options: FuzzyDateOptions = {
+      year: parseInt(dateParts[0], 10)
+    };
+    
+    if (isNaN(options.year)) {
+      throw new FuzzyDateDeserializationError('Invalid format');
+    }
+    
+    if (dateParts.length > 1) {
+      options.month = parseInt(dateParts[1], 10);
+      if (isNaN(options.month)) {
+        throw new FuzzyDateDeserializationError('Invalid format');
+      }
+    }
+    
+    if (dateParts.length > 2) {
+      options.day = parseInt(dateParts[2], 10);
+      if (isNaN(options.day)) {
+        throw new FuzzyDateDeserializationError('Invalid format');
+      }
+    }
+    
+    if (timePart) {
+      const timeParts = timePart.split(':');
+      
+      if (timeParts.length < 1 || timeParts.length > 3) {
+        throw new FuzzyDateDeserializationError('Invalid format');
+      }
+      
+      options.hour = parseInt(timeParts[0], 10);
+      if (isNaN(options.hour)) {
+        throw new FuzzyDateDeserializationError('Invalid format');
+      }
+      
+      if (timeParts.length > 1) {
+        options.minute = parseInt(timeParts[1], 10);
+        if (isNaN(options.minute)) {
+          throw new FuzzyDateDeserializationError('Invalid format');
+        }
+      }
+      
+      if (timeParts.length > 2) {
+        const [second, millisecond] = timeParts[2].split('.');
+        options.second = parseInt(second, 10);
+        if (isNaN(options.second)) {
+          throw new FuzzyDateDeserializationError('Invalid format');
+        }
+        
+        if (millisecond) {
+          options.millisecond = parseInt(millisecond, 10);
+          if (isNaN(options.millisecond)) {
+            throw new FuzzyDateDeserializationError('Invalid format');
+          }
+        }
+      }
+    }
+    
+    return new FuzzyDate(options);
   }
 }

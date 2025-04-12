@@ -406,6 +406,65 @@ const isInRange = testDate.isBetween(earliestMoment, latestMoment, null, '[]');
 console.log(isInRange ? 'Date is in range' : 'Date is not in range'); // Date is in range
 ```
 
+## Serialization Format
+
+`FuzzyDate` uses a custom Fuzzy Date String format for serialization. This format is designed to be:
+- Human-readable
+- Sortable
+- Flexible enough to represent varying levels of precision
+
+The format supports the following precision levels:
+- Year: "2023"
+- Year-Month: "2023-05"
+- Year-Month-Day: "2023-05-15"
+- Year-Month-Day Hour: "2023-05-15T10"
+- Year-Month-Day Hour:Minute: "2023-05-15T10:30"
+- Year-Month-Day Hour:Minute:Second: "2023-05-15T10:30:45"
+- Year-Month-Day Hour:Minute:Second.Millisecond: "2023-05-15T10:30:45.500"
+
+Note: The format is inspired by ISO 8601 but is specifically designed for fuzzy dates with partial precision.
+
+### Serialization Examples
+
+```typescript
+// Convert FuzzyDate to string
+const yearOnly = new FuzzyDate({ year: 2023 });
+console.log(yearOnly.toString()); // "2023"
+
+const monthPrecision = new FuzzyDate({ year: 2023, month: 5 });
+console.log(monthPrecision.toString()); // "2023-05"
+
+const fullPrecision = new FuzzyDate({
+  year: 2023, 
+  month: 5, 
+  day: 15, 
+  hour: 10, 
+  minute: 30, 
+  second: 45, 
+  millisecond: 500
+});
+console.log(fullPrecision.toString()); // "2023-05-15T10:30:45.500"
+
+// Parse string to FuzzyDate
+const fromYear = FuzzyDate.fromString("2023");
+console.log(fromYear.year); // 2023
+console.log(fromYear.month); // undefined
+
+const fromMonth = FuzzyDate.fromString("2023-05");
+console.log(fromMonth.year); // 2023
+console.log(fromMonth.month); // 5
+console.log(fromMonth.day); // undefined
+
+const fromFull = FuzzyDate.fromString("2023-05-15T10:30:45.500");
+console.log(fromFull.year); // 2023
+console.log(fromFull.month); // 5
+console.log(fromFull.day); // 15
+console.log(fromFull.hour); // 10
+console.log(fromFull.minute); // 30
+console.log(fromFull.second); // 45
+console.log(fromFull.millisecond); // 500
+```
+
 ## Error Handling
 
 `fuzzy-date-ts` provides specific error types for validation issues:

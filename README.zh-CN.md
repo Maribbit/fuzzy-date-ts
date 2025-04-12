@@ -107,7 +107,7 @@ console.log(fullDate.getPrecision()); // 'minute'
 
 每个模糊日期实际上是代表了一个时间范围：从最早可能的日期，到最晚可能的日期。
 
-例如，“2023年3月”代表从当月1日 00:00:00.000 到31日 23:59:59.999 的整个月份。
+例如，"2023年3月"代表从当月1日 00:00:00.000 到31日 23:59:59.999 的整个月份。
 
 ```typescript
 // 获取最早可能的日期（如：2023年3月1日 00:00:00.000）
@@ -404,6 +404,65 @@ console.log(latestMoment.format('YYYY-MM-DD HH:mm:ss'));   // 2023-03-31 23:59:5
 const testDate = moment('2023-03-15');
 const isInRange = testDate.isBetween(earliestMoment, latestMoment, null, '[]');
 console.log(isInRange ? '日期在范围内' : '日期不在范围内'); // 日期在范围内
+```
+
+## 序列化格式
+
+`FuzzyDate` 使用自定义的 Fuzzy Date String 格式进行序列化。该格式设计为：
+- 人类可读
+- 可排序
+- 足够灵活以表示不同的精度级别
+
+该格式支持以下精度级别：
+- 年： "2023"
+- 年月： "2023-05"
+- 年月日： "2023-05-15"
+- 年月日 时： "2023-05-15T10"
+- 年月日 时:分： "2023-05-15T10:30"
+- 年月日 时:分:秒： "2023-05-15T10:30:45"
+- 年月日 时:分:秒.毫秒： "2023-05-15T10:30:45.500"
+
+注：该格式的设计灵感来自 ISO 8601，但专门为具有部分精度的模糊日期而设计。
+
+### 序列化示例
+
+```typescript
+// 将 FuzzyDate 转换为字符串
+const yearOnly = new FuzzyDate({ year: 2023 });
+console.log(yearOnly.toString()); // "2023"
+
+const monthPrecision = new FuzzyDate({ year: 2023, month: 5 });
+console.log(monthPrecision.toString()); // "2023-05"
+
+const fullPrecision = new FuzzyDate({
+  year: 2023, 
+  month: 5, 
+  day: 15, 
+  hour: 10, 
+  minute: 30, 
+  second: 45, 
+  millisecond: 500
+});
+console.log(fullPrecision.toString()); // "2023-05-15T10:30:45.500"
+
+// 解析字符串为 FuzzyDate
+const fromYear = FuzzyDate.fromString("2023");
+console.log(fromYear.year); // 2023
+console.log(fromYear.month); // undefined
+
+const fromMonth = FuzzyDate.fromString("2023-05");
+console.log(fromMonth.year); // 2023
+console.log(fromMonth.month); // 5
+console.log(fromMonth.day); // undefined
+
+const fromFull = FuzzyDate.fromString("2023-05-15T10:30:45.500");
+console.log(fromFull.year); // 2023
+console.log(fromFull.month); // 5
+console.log(fromFull.day); // 15
+console.log(fromFull.hour); // 10
+console.log(fromFull.minute); // 30
+console.log(fromFull.second); // 45
+console.log(fromFull.millisecond); // 500
 ```
 
 ## 错误处理
