@@ -7,6 +7,21 @@ describe("FuzzyDate serialization", () => {
       expect(date.toString()).toBe("2023");
     });
 
+    test("should serialize BC year-only date", () => {
+      const date = new FuzzyDate({ year: -2023 });
+      expect(date.toString()).toBe("-2023");
+    });
+
+    test("should serialize BC year-month date", () => {
+      const date = new FuzzyDate({ year: -2023, month: 5 });
+      expect(date.toString()).toBe("-2023-05");
+    });
+
+    test("should serialize BC full date", () => {
+      const date = new FuzzyDate({ year: -2023, month: 5, day: 15 });
+      expect(date.toString()).toBe("-2023-05-15");
+    });
+
     test("should serialize year-month date", () => {
       const date = new FuzzyDate({ year: 2023, month: 5 });
       expect(date.toString()).toBe("2023-05");
@@ -49,6 +64,27 @@ describe("FuzzyDate serialization", () => {
       expect(date.year).toBe(2023);
       expect(date.month).toBeUndefined();
       expect(date.day).toBeUndefined();
+    });
+
+    test("should parse BC year-only date", () => {
+      const date = FuzzyDate.fromString("-2023");
+      expect(date.year).toBe(-2023);
+      expect(date.month).toBeUndefined();
+      expect(date.day).toBeUndefined();
+    });
+
+    test("should parse BC year-month date", () => {
+      const date = FuzzyDate.fromString("-2023-05");
+      expect(date.year).toBe(-2023);
+      expect(date.month).toBe(5);
+      expect(date.day).toBeUndefined();
+    });
+
+    test("should parse BC full date", () => {
+      const date = FuzzyDate.fromString("-2023-05-15");
+      expect(date.year).toBe(-2023);
+      expect(date.month).toBe(5);
+      expect(date.day).toBe(15);
     });
 
     test("should parse year-month date", () => {

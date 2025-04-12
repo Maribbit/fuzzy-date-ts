@@ -234,7 +234,7 @@ export class FuzzyDate {
   toString(): string {
     const parts: string[] = [];
     
-    // Always include year
+    // Handle BC years with negative sign
     parts.push(this.year.toString().padStart(4, '0'));
     
     if (this.month !== undefined) {
@@ -287,13 +287,18 @@ export class FuzzyDate {
    */
   static fromString(dateString: string): FuzzyDate {
     // Validate the overall format
-    if (!/^\d{4}(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{2}(\.\d{3})?)?)?)?)?)?$/.test(dateString)) {
+    if (!/^-?\d{4}(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{2}(\.\d{3})?)?)?)?)?)?$/.test(dateString)) {
       throw new FuzzyDateDeserializationError('Invalid format');
     }
 
     // Split the string into date and time parts
     const [datePart, timePart] = dateString.split('T');
-    const dateParts = datePart.split('-');
+    
+    // Handle negative year case
+    const hasNegativeYear = datePart.startsWith('-');
+    const dateParts = hasNegativeYear 
+      ? ['-' + datePart.split('-')[1], ...datePart.split('-').slice(2)]
+      : datePart.split('-');
     
     if (dateParts.length < 1 || dateParts.length > 3) {
       throw new FuzzyDateDeserializationError('Invalid format');
@@ -307,6 +312,7 @@ export class FuzzyDate {
       throw new FuzzyDateDeserializationError('Invalid format');
     }
     
+    // Handle month and day parts
     if (dateParts.length > 1) {
       options.month = parseInt(dateParts[1], 10);
       if (isNaN(options.month)) {
