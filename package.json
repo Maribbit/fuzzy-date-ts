@@ -1,6 +1,6 @@
 {
   "name": "fuzzy-date-ts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A TypeScript library for handling dates with variable precision",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
