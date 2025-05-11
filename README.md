@@ -4,7 +4,7 @@ A TypeScript library for handling fuzzy dates with precision levels from year to
 
 [![npm version](https://img.shields.io/npm/v/fuzzy-date-ts.svg)](https://www.npmjs.com/package/fuzzy-date-ts)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![codecov](https://codecov.io/gh/maribbit/fuzzy-date-ts/branch/main/graph/badge.svg)](https://codecov.io/gh/maribbit/fuzzy-date-ts)
+[![codecov](https://codecov.io/gh/maribbit/fuzzy-date-ts/graph/badge.svg?token=2D5JH3376K)](https://codecov.io/gh/maribbit/fuzzy-date-ts)
 
 [English](README.md) | [中文](README.zh-CN.md)
 
