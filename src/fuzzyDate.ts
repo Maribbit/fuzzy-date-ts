@@ -287,7 +287,7 @@ export class FuzzyDate {
    */
   static fromString(dateString: string): FuzzyDate {
     // Validate the overall format
-    if (!/^-?\d{4}(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{2}(\.\d{3})?)?)?)?)?)?$/.test(dateString)) {
+    if (!/^-?\d+(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{2}(\.\d{3})?)?)?)?)?)?$/.test(dateString)) {
       throw new FuzzyDateDeserializationError('Invalid format');
     }
 

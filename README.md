@@ -422,7 +422,9 @@ The format supports the following precision levels:
 - Year-Month-Day Hour:Minute:Second: "2023-05-15T10:30:45"
 - Year-Month-Day Hour:Minute:Second.Millisecond: "2023-05-15T10:30:45.500"
 
-Note: The format is inspired by ISO 8601 but is specifically designed for fuzzy dates with partial precision.
+Edge cases:
+- Earliest Date: "-100000-01-01T00:00:00.000"
+- Latest Date: "99999-12-31T23:59:59.999"
 
 ### Serialization Examples
 

@@ -1,7 +1,7 @@
 import { FuzzyDate, FuzzyDateDeserializationError, FuzzyDateCalendarError } from "../../src/fuzzyDate";
 
 describe("FuzzyDate serialization", () => {
-  describe("toISOString", () => {
+  describe("toString", () => {
     test("should serialize year-only date", () => {
       const date = new FuzzyDate({ year: 2023 });
       expect(date.toString()).toBe("2023");
@@ -56,9 +56,24 @@ describe("FuzzyDate serialization", () => {
       const date = new FuzzyDate({ year: 2023, month: 1, day: 1, hour: 1, minute: 1, second: 1, millisecond: 1 });
       expect(date.toString()).toBe("2023-01-01T01:01:01.001");
     });
+
+    test("should serialize latest date", () => {
+      const date = new FuzzyDate({ year: 99999, month: 12, day: 31, hour: 23, minute: 59, second: 59, millisecond: 999 });
+      expect(date.toString()).toBe("99999-12-31T23:59:59.999");
+    })
+
+    test("should serialize earliest BC date", () => {
+      const date = new FuzzyDate({ year: -100000, month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 });
+      expect(date.toString()).toBe("-100000-01-01T00:00:00.000");
+    })
+
+    test("should serialize smallest year date", () => {
+      const date = new FuzzyDate({ year: 1, month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 });
+      expect(date.toString()).toBe("0001-01-01T00:00:00.000");
+    })
   });
 
-  describe("fromISOString", () => {
+  describe("fromString", () => {
     test("should parse year-only date", () => {
       const date = FuzzyDate.fromString("2023");
       expect(date.year).toBe(2023);
@@ -153,6 +168,40 @@ describe("FuzzyDate serialization", () => {
       expect(date.second).toBe(1);
       expect(date.millisecond).toBe(1);
     });
+
+
+    test("should parse small year date", () => {
+      const date = FuzzyDate.fromString("0001-01-01T00:00:00.000");
+      expect(date.year).toBe(1);
+      expect(date.month).toBe(1);
+      expect(date.day).toBe(1);
+      expect(date.hour).toBe(0);
+      expect(date.minute).toBe(0);
+      expect(date.second).toBe(0);
+      expect(date.millisecond).toBe(0);
+    })
+
+    test("should parse latest date", () => {
+      const date = FuzzyDate.fromString("99999-12-31T23:59:59.999");
+      expect(date.year).toBe(99999);
+      expect(date.month).toBe(12);
+      expect(date.day).toBe(31);
+      expect(date.hour).toBe(23);
+      expect(date.minute).toBe(59);
+      expect(date.second).toBe(59);
+      expect(date.millisecond).toBe(999);
+    })
+
+    test("should parse earliest BC date", () => {
+      const date = FuzzyDate.fromString("-100000-01-01T00:00:00.000");
+      expect(date.year).toBe(-100000);
+      expect(date.month).toBe(1);
+      expect(date.day).toBe(1);
+      expect(date.hour).toBe(0);
+      expect(date.minute).toBe(0);
+      expect(date.second).toBe(0);
+      expect(date.millisecond).toBe(0);
+    })
 
     test("should throw error for invalid format", () => {
       expect(() => FuzzyDate.fromString("2023-05-15T10:30:45.500-invalid")).toThrow(FuzzyDateDeserializationError);
