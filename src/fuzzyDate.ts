@@ -235,7 +235,7 @@ export class FuzzyDate {
     const parts: string[] = [];
     
     // Handle BC years with negative sign
-    parts.push(this.year.toString().padStart(4, '0'));
+    parts.push(this.year.toString());
     
     if (this.month !== undefined) {
       parts.push('-');

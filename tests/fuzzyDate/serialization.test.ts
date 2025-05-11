@@ -69,7 +69,7 @@ describe("FuzzyDate serialization", () => {
 
     test("should serialize smallest year date", () => {
       const date = new FuzzyDate({ year: 1, month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0 });
-      expect(date.toString()).toBe("0001-01-01T00:00:00.000");
+      expect(date.toString()).toBe("1-01-01T00:00:00.000");
     })
   });
 
