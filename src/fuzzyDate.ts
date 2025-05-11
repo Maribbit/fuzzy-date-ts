@@ -300,64 +300,34 @@ export class FuzzyDate {
       ? ['-' + datePart.split('-')[1], ...datePart.split('-').slice(2)]
       : datePart.split('-');
     
-    if (dateParts.length < 1 || dateParts.length > 3) {
-      throw new FuzzyDateDeserializationError('Invalid format');
-    }
-    
     const options: FuzzyDateOptions = {
       year: parseInt(dateParts[0], 10)
     };
     
-    if (isNaN(options.year)) {
-      throw new FuzzyDateDeserializationError('Invalid format');
-    }
-    
     // Handle month and day parts
     if (dateParts.length > 1) {
       options.month = parseInt(dateParts[1], 10);
-      if (isNaN(options.month)) {
-        throw new FuzzyDateDeserializationError('Invalid format');
-      }
     }
     
     if (dateParts.length > 2) {
       options.day = parseInt(dateParts[2], 10);
-      if (isNaN(options.day)) {
-        throw new FuzzyDateDeserializationError('Invalid format');
-      }
     }
     
     if (timePart) {
       const timeParts = timePart.split(':');
       
-      if (timeParts.length < 1 || timeParts.length > 3) {
-        throw new FuzzyDateDeserializationError('Invalid format');
-      }
-      
       options.hour = parseInt(timeParts[0], 10);
-      if (isNaN(options.hour)) {
-        throw new FuzzyDateDeserializationError('Invalid format');
-      }
       
       if (timeParts.length > 1) {
         options.minute = parseInt(timeParts[1], 10);
-        if (isNaN(options.minute)) {
-          throw new FuzzyDateDeserializationError('Invalid format');
-        }
       }
       
       if (timeParts.length > 2) {
         const [second, millisecond] = timeParts[2].split('.');
         options.second = parseInt(second, 10);
-        if (isNaN(options.second)) {
-          throw new FuzzyDateDeserializationError('Invalid format');
-        }
         
         if (millisecond) {
           options.millisecond = parseInt(millisecond, 10);
-          if (isNaN(options.millisecond)) {
-            throw new FuzzyDateDeserializationError('Invalid format');
-          }
         }
       }
     }
