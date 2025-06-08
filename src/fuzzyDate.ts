@@ -237,27 +237,27 @@ export class FuzzyDate {
     // Handle BC years with negative sign
     parts.push(this.year.toString());
     
-    if (this.month !== undefined) {
+    if (!isEmpty(this.month)) {
       parts.push('-');
       parts.push(this.month.toString().padStart(2, '0'));
-      
-      if (this.day !== undefined) {
+
+      if (!isEmpty(this.day)) {
         parts.push('-');
         parts.push(this.day.toString().padStart(2, '0'));
         
-        if (this.hour !== undefined) {
+        if (!isEmpty(this.hour)) {
           parts.push('T');
           parts.push(this.hour.toString().padStart(2, '0'));
-          
-          if (this.minute !== undefined) {
+
+          if (!isEmpty(this.minute)) {
             parts.push(':');
             parts.push(this.minute.toString().padStart(2, '0'));
-            
-            if (this.second !== undefined) {
+
+            if (!isEmpty(this.second)) {
               parts.push(':');
               parts.push(this.second.toString().padStart(2, '0'));
-              
-              if (this.millisecond !== undefined) {
+
+              if (!isEmpty(this.millisecond)) {
                 parts.push('.');
                 parts.push(this.millisecond.toString().padStart(3, '0'));
               }
